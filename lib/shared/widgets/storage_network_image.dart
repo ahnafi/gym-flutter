@@ -4,7 +4,7 @@ import 'package:gym_app/app/data/providers/api_routes.dart';
 import 'package:gym_app/app/core/services/user_info.dart';
 
 /// Widget to load images from Laravel storage with Sanctum authentication
-/// 
+///
 /// Usage:
 /// ```dart
 /// StorageNetworkImage(
@@ -95,10 +95,7 @@ class StorageNetworkImage extends StatelessWidget {
         );
 
         if (borderRadius != null) {
-          return ClipRRect(
-            borderRadius: borderRadius!,
-            child: imageWidget,
-          );
+          return ClipRRect(borderRadius: borderRadius!, child: imageWidget);
         }
 
         return imageWidget;
