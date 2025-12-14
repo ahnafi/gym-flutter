@@ -3,6 +3,9 @@ abstract class ApiUrl {
   // Base URL
   static const String baseUrl = 'https://gym.sulthon.blue/api/v1';
 
+  // Dashboard
+  static const String dashboard = '$baseUrl/dashboard';
+
   // Authentication (Public routes)
   static const String register = '$baseUrl/register';
   static const String login = '$baseUrl/login';
