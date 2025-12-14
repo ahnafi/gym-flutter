@@ -22,7 +22,9 @@ class Api {
 
   Future<dynamic> get(dynamic url) async {
     var token = await UserInfo().getToken();
-    print('🔑 Token (first 20 chars): ${token?.substring(0, token.length > 20 ? 20 : token.length)}...');
+    print(
+      '🔑 Token (first 20 chars): ${token?.substring(0, token.length > 20 ? 20 : token.length)}...',
+    );
     print('🌐 GET Request to: $url');
     var responseJson;
     try {

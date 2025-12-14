@@ -21,13 +21,16 @@ class DashboardSummary {
     return DashboardSummary(
       visitCountInCurrentMonth: json['visitCountInCurrentMonth'] as int? ?? 0,
       visitCountInCurrentWeek: json['visitCountInCurrentWeek'] as int? ?? 0,
-      gymClassCountInCurrentMonth: json['gymClassCountInCurrentMonth'] as int? ?? 0,
-      averageVisitTimeInCurrentMonth: json['averageVisitTimeInCurrentMonth'] != null
+      gymClassCountInCurrentMonth:
+          json['gymClassCountInCurrentMonth'] as int? ?? 0,
+      averageVisitTimeInCurrentMonth:
+          json['averageVisitTimeInCurrentMonth'] != null
           ? (json['averageVisitTimeInCurrentMonth'] as num).toDouble()
           : null,
       averageVisitTimeFormatted: json['averageVisitTimeFormatted'] as String?,
       currentMembership: json['currentMembership'] as Map<String, dynamic>?,
-      currentMembershipPackage: json['currentMembershipPackage'] as Map<String, dynamic>?,
+      currentMembershipPackage:
+          json['currentMembershipPackage'] as Map<String, dynamic>?,
     );
   }
 
@@ -60,15 +63,21 @@ class DashboardData {
   factory DashboardData.fromJson(Map<String, dynamic> json) {
     return DashboardData(
       user: json['user'] as Map<String, dynamic>,
-      gymVisits: (json['gymVisits'] as List<dynamic>?)
-          ?.map((e) => e as Map<String, dynamic>)
-          .toList() ?? [],
-      membershipHistories: (json['membershipHistories'] as List<dynamic>?)
-          ?.map((e) => e as Map<String, dynamic>)
-          .toList() ?? [],
-      gymClassAttendances: (json['gymClassAttendances'] as List<dynamic>?)
-          ?.map((e) => e as Map<String, dynamic>)
-          .toList() ?? [],
+      gymVisits:
+          (json['gymVisits'] as List<dynamic>?)
+              ?.map((e) => e as Map<String, dynamic>)
+              .toList() ??
+          [],
+      membershipHistories:
+          (json['membershipHistories'] as List<dynamic>?)
+              ?.map((e) => e as Map<String, dynamic>)
+              .toList() ??
+          [],
+      gymClassAttendances:
+          (json['gymClassAttendances'] as List<dynamic>?)
+              ?.map((e) => e as Map<String, dynamic>)
+              .toList() ??
+          [],
     );
   }
 
@@ -86,22 +95,18 @@ class Dashboard {
   final DashboardSummary summary;
   final DashboardData data;
 
-  Dashboard({
-    required this.summary,
-    required this.data,
-  });
+  Dashboard({required this.summary, required this.data});
 
   factory Dashboard.fromJson(Map<String, dynamic> json) {
     return Dashboard(
-      summary: DashboardSummary.fromJson(json['summary'] as Map<String, dynamic>),
+      summary: DashboardSummary.fromJson(
+        json['summary'] as Map<String, dynamic>,
+      ),
       data: DashboardData.fromJson(json['data'] as Map<String, dynamic>),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'summary': summary.toJson(),
-      'data': data.toJson(),
-    };
+    return {'summary': summary.toJson(), 'data': data.toJson()};
   }
 }

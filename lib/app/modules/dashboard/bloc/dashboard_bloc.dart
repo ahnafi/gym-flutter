@@ -6,13 +6,16 @@ class LoadDashboard {}
 
 // States
 class DashboardInitial {}
+
 class DashboardLoading {}
+
 class DashboardLoaded {
   final Map<String, dynamic> summary;
   final Map<String, dynamic> data;
-  
+
   DashboardLoaded(this.summary, this.data);
 }
+
 class DashboardError {
   final String message;
   DashboardError(this.message);
@@ -22,7 +25,8 @@ class DashboardError {
 class DashboardBloc extends Bloc<Object, Object> {
   final DashboardRepository dashboardRepository;
 
-  DashboardBloc({required this.dashboardRepository}) : super(DashboardInitial()) {
+  DashboardBloc({required this.dashboardRepository})
+    : super(DashboardInitial()) {
     on<LoadDashboard>(_onLoadDashboard);
   }
 
@@ -34,14 +38,20 @@ class DashboardBloc extends Bloc<Object, Object> {
     emit(DashboardLoading());
     try {
       final response = await dashboardRepository.getDashboardData();
-      
+
       // The API returns: { status: "success", data: { summary: {...}, user: {...}, ... } }
-      final dataWrapper = Map<String, dynamic>.from(response['data'] ?? <String, dynamic>{});
-      final summary = Map<String, dynamic>.from(dataWrapper['summary'] ?? <String, dynamic>{});
+      final dataWrapper = Map<String, dynamic>.from(
+        response['data'] ?? <String, dynamic>{},
+      );
+      final summary = Map<String, dynamic>.from(
+        dataWrapper['summary'] ?? <String, dynamic>{},
+      );
       final data = Map<String, dynamic>.from(dataWrapper);
-      
+
       print('✅ DashboardBloc: Loaded dashboard data');
-      print('📊 Summary: visitCountInCurrentMonth=${summary['visitCountInCurrentMonth']}, gymClassCount=${summary['gymClassCountInCurrentMonth']}');
+      print(
+        '📊 Summary: visitCountInCurrentMonth=${summary['visitCountInCurrentMonth']}, gymClassCount=${summary['gymClassCountInCurrentMonth']}',
+      );
       emit(DashboardLoaded(summary, data));
     } catch (e) {
       print('❌ DashboardBloc error: $e');
