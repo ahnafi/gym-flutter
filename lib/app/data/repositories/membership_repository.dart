@@ -76,21 +76,29 @@ class MembershipRepository {
   }
 
   /// Purchase a membership package (protected endpoint)
-  Future<Map<String, dynamic>> purchaseMembership(String packageId) async {
+  Future<Map<String, dynamic>> purchaseMembership(int packageId) async {
     try {
+      print('💳 Purchasing membership package: $packageId');
+      
       final response = await _api.post(
-        ApiUrl.purchaseMembership,
-        json.encode({'package_id': packageId}),
+        ApiUrl.paymentMembership,
+        {
+          'membership_package_id': packageId.toString(),
+        },
       );
 
+      print('💳 Response status: ${response.statusCode}');
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return json.decode(response.body);
+        final jsonData = json.decode(response.body);
+        return jsonData;
       } else {
-        final error = json.decode(response.body);
-        throw Exception(error['message'] ?? 'Failed to purchase membership');
+        final errorData = json.decode(response.body);
+        throw Exception(errorData['message'] ?? 'Failed to purchase membership');
       }
     } catch (e) {
-      throw Exception('Error purchasing membership: $e');
+      print('❌ Error purchasing membership: $e');
+      rethrow;
     }
   }
 

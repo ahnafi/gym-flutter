@@ -11,7 +11,7 @@ class LoadMembershipPackageDetail {
 }
 
 class PurchaseMembershipPackage {
-  final String packageId;
+  final int packageId;
   PurchaseMembershipPackage(this.packageId);
 }
 
@@ -36,8 +36,8 @@ class MembershipPackageDetailLoaded {
 class MembershipPurchaseInProgress {}
 
 class MembershipPurchaseSuccess {
-  final String message;
-  MembershipPurchaseSuccess(this.message);
+  final Map<String, dynamic> transaction;
+  MembershipPurchaseSuccess(this.transaction);
 }
 
 class MembershipError {
@@ -95,18 +95,17 @@ class MembershipBloc extends Bloc<Object, Object> {
     PurchaseMembershipPackage event,
     Emitter<Object> emit,
   ) async {
+    print('🔄 MembershipBloc: Purchasing membership package ${event.packageId}...');
     emit(MembershipPurchaseInProgress());
+    
     try {
       final result = await membershipRepository.purchaseMembership(
         event.packageId,
       );
-      emit(
-        MembershipPurchaseSuccess(
-          result['message'] ?? 'Membership purchased successfully',
-        ),
-      );
-      add(LoadMembershipPackages());
+      print('✅ MembershipBloc: Purchase successful');
+      emit(MembershipPurchaseSuccess(result));
     } catch (e) {
+      print('❌ MembershipBloc error purchasing: $e');
       emit(MembershipError(e.toString()));
     }
   }

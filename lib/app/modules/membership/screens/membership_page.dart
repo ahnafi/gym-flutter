@@ -38,8 +38,13 @@ class MembershipView extends StatelessWidget {
           }
           if (state is MembershipPurchaseSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.green),
+              const SnackBar(
+                content: Text('Membership purchased successfully! Redirecting to payment...'),
+                backgroundColor: Colors.green,
+              ),
             );
+            // TODO: Navigate to payment page with snap_token
+            // The transaction data is in state.transaction
           }
         },
         builder: (context, state) {
@@ -211,7 +216,7 @@ class MembershipView extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pop(bottomSheetContext);
-                  context.read<MembershipBloc>().add(PurchaseMembershipPackage(package.id));
+                  _showPurchaseConfirmation(context, package);
                 },
                 style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                 child: const Text('Purchase Now', style: TextStyle(fontSize: 16)),
@@ -219,6 +224,51 @@ class MembershipView extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showPurchaseConfirmation(BuildContext context, dynamic package) {
+    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ');
+    
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Confirm Purchase'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Package: ${package.name}',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            Text('Duration: ${package.duration} days'),
+            Text('Price: ${currencyFormat.format(package.price)}'),
+            const SizedBox(height: 16),
+            const Text(
+              'Are you sure you want to purchase this membership package?',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              // Trigger purchase via bloc
+              context.read<MembershipBloc>().add(
+                PurchaseMembershipPackage(int.parse(package.id)),
+              );
+            },
+            child: const Text('Confirm'),
+          ),
+        ],
       ),
     );
   }
