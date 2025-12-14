@@ -18,7 +18,7 @@ class GymVisit {
     required this.createdAt,
     required this.updatedAt,
   });
-  
+
   factory GymVisit.fromJson(Map<String, dynamic> json) {
     return GymVisit(
       id: json['id'] as int,

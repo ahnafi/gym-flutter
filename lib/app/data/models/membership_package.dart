@@ -41,5 +41,6 @@ class MembershipPackage {
   }
 
   /// Get the first image path for display
-  String get primaryImage => images.isNotEmpty ? images.first : 'membership_package/default.jpg';
+  String get primaryImage =>
+      images.isNotEmpty ? images.first : 'membership_package/default.jpg';
 }
