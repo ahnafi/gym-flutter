@@ -5,9 +5,9 @@ class GymClassSchedule {
   final String endTime;
   final int slot;
   final int availableSlot;
-  final String gymClassId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final int gymClassId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   GymClassSchedule({
     required this.id,
@@ -17,8 +17,8 @@ class GymClassSchedule {
     required this.slot,
     required this.availableSlot,
     required this.gymClassId,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory GymClassSchedule.fromJson(Map<String, dynamic> json) {
@@ -29,9 +29,24 @@ class GymClassSchedule {
       endTime: json['end_time'] as String,
       slot: json['slot'] as int,
       availableSlot: json['available_slot'] as int,
-      gymClassId: json['gym_class_id'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      gymClassId: json['gym_class_id'] as int,
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
     );
   }
+
+  // Helper getter to check if slots are available
+  bool get hasAvailableSlots => availableSlot > 0;
+
+  // Helper getter to check if fully booked
+  bool get isFullyBooked => availableSlot == 0;
+
+  // Helper getter for formatted date
+  String get formattedDate {
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  // Helper getter for formatted time range
+  String get timeRange => '$startTime - $endTime';
 }
