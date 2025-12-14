@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_app/app/data/repositories/transaction_repository.dart';
 import 'package:gym_app/app/modules/payments/bloc/transaction_bloc.dart';
+import 'package:gym_app/app/modules/payments/screens/midtrans_payment_page.dart';
 import 'package:intl/intl.dart';
 
 class PaymentsPage extends StatelessWidget {
@@ -336,14 +337,43 @@ class PaymentsView extends StatelessWidget {
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // TODO: Open Midtrans payment with snap_token
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Payment integration coming soon!'),
-                                backgroundColor: Colors.orange,
+                          onPressed: () async {
+                            Navigator.pop(context); // Close bottom sheet first
+                            
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MidtransPaymentPage(
+                                  snapToken: transaction.snapToken!,
+                                  transactionCode: transaction.code,
+                                ),
                               ),
                             );
+
+                            // Handle payment result
+                            if (result != null) {
+                              final status = result['status'];
+                              final message = result['message'];
+                              
+                              Color backgroundColor;
+                              if (status == 'success') {
+                                backgroundColor = Colors.green;
+                              } else if (status == 'pending') {
+                                backgroundColor = Colors.orange;
+                              } else {
+                                backgroundColor = Colors.red;
+                              }
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(message),
+                                  backgroundColor: backgroundColor,
+                                ),
+                              );
+
+                              // Refresh transaction list
+                              context.read<TransactionBloc>().add(LoadTransactions());
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
