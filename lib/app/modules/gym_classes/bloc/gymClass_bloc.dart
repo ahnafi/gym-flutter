@@ -10,6 +10,11 @@ class LoadGymClassDetail {
   final int classId;
   LoadGymClassDetail(this.classId);
 }
+class PurchaseGymClass {
+  final int gymClassId;
+  final int gymClassScheduleId;
+  PurchaseGymClass({required this.gymClassId, required this.gymClassScheduleId});
+}
 class GymClassError {
   final String message;
   GymClassError(this.message);
@@ -22,6 +27,10 @@ class GymClassDetailLoaded {
   final GymClassDetail classDetail;
   GymClassDetailLoaded(this.classDetail);
 }
+class GymClassPurchaseSuccess {
+  final Map<String, dynamic> transaction;
+  GymClassPurchaseSuccess(this.transaction);
+}
 
 class GymClassBloc extends Bloc<Object, Object> {
   final GymclassRepository gymclassRepository;
@@ -30,6 +39,7 @@ class GymClassBloc extends Bloc<Object, Object> {
     : super(GymClassInitial()) {
       on<LoadGymClasses>(_onLoadGymClasses);
       on<LoadGymClassDetail>(_onLoadGymClassDetail);
+      on<PurchaseGymClass>(_onPurchaseGymClass);
   }
 
   Future<void> _onLoadGymClasses(
@@ -62,6 +72,26 @@ class GymClassBloc extends Bloc<Object, Object> {
       emit(GymClassDetailLoaded(classDetail));
     } catch (e) {
       print('❌ GymClassBloc error loading detail: $e');
+      emit(GymClassError(e.toString()));
+    }
+  }
+
+  Future<void> _onPurchaseGymClass(
+    PurchaseGymClass event,
+    Emitter<Object> emit,
+  ) async {
+    print('🔄 GymClassBloc: Purchasing gym class ${event.gymClassId}...');
+    emit(GymClassLoading());
+
+    try {
+      final result = await gymclassRepository.buyGymClass(
+        gymClassId: event.gymClassId,
+        gymClassScheduleId: event.gymClassScheduleId,
+      );
+      print('✅ GymClassBloc: Purchase successful');
+      emit(GymClassPurchaseSuccess(result));
+    } catch (e) {
+      print('❌ GymClassBloc error purchasing: $e');
       emit(GymClassError(e.toString()));
     }
   }

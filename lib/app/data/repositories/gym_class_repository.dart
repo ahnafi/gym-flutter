@@ -77,4 +77,34 @@ class GymclassRepository {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> buyGymClass({
+    required int gymClassId,
+    required int gymClassScheduleId,
+  }) async {
+    try {
+      print('🏋️‍♂️ Purchasing gym class: $gymClassId, schedule: $gymClassScheduleId');
+      
+      final response = await _api.post(
+        ApiUrl.purchaseGymClass,
+        {
+          'gym_class_id': gymClassId.toString(),
+          'gym_class_schedule_id': gymClassScheduleId.toString(),
+        },
+      );
+
+      print('🏋️‍♂️ Response status: ${response.statusCode}');
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        return jsonData;
+      } else {
+        final errorData = json.decode(response.body);
+        throw Exception(errorData['message'] ?? 'Failed to purchase gym class');
+      }
+    } catch (e) {
+      print('❌ Error purchasing gym class: $e');
+      rethrow;
+    }
+  }
 }

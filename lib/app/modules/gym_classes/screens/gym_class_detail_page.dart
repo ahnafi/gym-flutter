@@ -43,6 +43,15 @@ class GymClassDetailView extends StatelessWidget {
                 backgroundColor: Colors.red,
               ),
             );
+          } else if (state is GymClassPurchaseSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Class booked successfully! Redirecting to payment...'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            // TODO: Navigate to payment page with snap_token
+            // The transaction data is in state.transaction
           }
         },
         builder: (context, state) {
@@ -251,7 +260,7 @@ class GymClassDetailView extends StatelessWidget {
                 (context, index) => _buildScheduleCard(
                   context,
                   classDetail.schedules[index],
-                  classDetail.name,
+                  classDetail,
                 ),
                 childCount: classDetail.schedules.length,
               ),
@@ -261,7 +270,7 @@ class GymClassDetailView extends StatelessWidget {
     );
   }
 
-  Widget _buildScheduleCard(BuildContext context, dynamic schedule, String className) {
+  Widget _buildScheduleCard(BuildContext context, dynamic schedule, dynamic classDetail) {
     final dateFormat = DateFormat('EEEE, dd MMM yyyy');
 
     return Card(
@@ -365,7 +374,7 @@ class GymClassDetailView extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: schedule.availableSlot > 0
-                    ? () => _handleBookClass(context, schedule, className)
+                    ? () => _handleBookClass(context, schedule, classDetail)
                     : null,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -388,18 +397,18 @@ class GymClassDetailView extends StatelessWidget {
     );
   }
 
-  void _handleBookClass(BuildContext context, dynamic schedule, String className) {
+  void _handleBookClass(BuildContext context, dynamic schedule, dynamic classDetail) {
     final dateFormat = DateFormat('dd MMM yyyy');
     
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Confirm Booking'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Class: $className'),
+            Text('Class: ${classDetail.name}'),
             const SizedBox(height: 8),
             Text('Date: ${dateFormat.format(schedule.date)}'),
             Text('Time: ${schedule.startTime} - ${schedule.endTime}'),
@@ -412,16 +421,17 @@ class GymClassDetailView extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Booking feature coming soon!'),
-                  backgroundColor: Colors.orange,
+              Navigator.pop(dialogContext);
+              // Trigger purchase via bloc
+              context.read<GymClassBloc>().add(
+                PurchaseGymClass(
+                  gymClassId: classDetail.id,
+                  gymClassScheduleId: schedule.id,
                 ),
               );
             },
