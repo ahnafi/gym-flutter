@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
     return RepositoryProvider(
       create: (context) => AuthRepository(),
       child: BlocProvider(
-        create: (context) => AuthBloc(
-          authRepository: context.read<AuthRepository>(),
-        )..add(AuthCheckRequested()),
+        create: (context) =>
+            AuthBloc(authRepository: context.read<AuthRepository>())
+              ..add(AuthCheckRequested()),
         child: MaterialApp(
           title: 'Gym App',
           debugShowCheckedModeBanner: false,
@@ -45,9 +45,7 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, state) {
         if (state is AuthLoading || state is AuthInitial) {
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         } else if (state is AuthAuthenticated) {
           return const MainNavigation();

@@ -24,16 +24,19 @@ class AppRoutes {
     switch (settings.name) {
       case login:
         return MaterialPageRoute(builder: (_) => const LoginPage());
-      
+
       case register:
         return MaterialPageRoute(builder: (_) => const RegisterPage());
-      
+
       case dashboard:
         return MaterialPageRoute(builder: (_) => const DashboardPage());
-      
+
+      case home:
+        return MaterialPageRoute(builder: (_) => const HomePage());
+
       case gymClasses:
         return MaterialPageRoute(builder: (_) => const GymClassesPage());
-      
+
       case membership:
         return MaterialPageRoute(builder: (_) => const MembershipPage());
 
@@ -42,13 +45,11 @@ class AppRoutes {
       
       case profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
-      
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
-            body: Center(
-              child: Text('No route defined for ${settings.name}'),
-            ),
+            body: Center(child: Text('No route defined for ${settings.name}')),
           ),
         );
     }

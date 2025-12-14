@@ -318,6 +318,7 @@ class DashboardView extends StatelessWidget {
             );
           }
 
+
           return const Center(child: CircularProgressIndicator());
         },
       ),
@@ -395,9 +396,7 @@ class DashboardView extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
             ],

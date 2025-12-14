@@ -53,6 +53,7 @@ class AuthBloc extends Bloc<Object, Object> {
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
     on<AuthCheckRequested>(_onCheckRequested);
+    on<AuthProfileUpdated>(_onProfileUpdated);
   }
 
   Future<void> _onLoginRequested(
