@@ -10,9 +10,7 @@ class PaymentsPage extends StatelessWidget {
         title: const Text('Payments'),
         automaticallyImplyLeading: false,
       ),
-      body: const Center(
-        child: Text('Payments Page - Coming Soon'),
-      ),
+      body: const Center(child: Text('Payments Page - Coming Soon')),
     );
   }
 }
