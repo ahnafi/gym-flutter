@@ -1,12 +1,54 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gym_app/app/data/models/user.dart';
 import 'package:gym_app/app/data/repositories/auth_repository.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_event.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
+// Events
+class AuthLoginRequested {
+  final String email;
+  final String password;
+  AuthLoginRequested(this.email, this.password);
+}
+
+class AuthRegisterRequested {
+  final String name;
+  final String email;
+  final String password;
+  final String passwordConfirmation;
+  final String? phone;
+  final String? profileBio;
+  
+  AuthRegisterRequested({
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.passwordConfirmation,
+    this.phone,
+    this.profileBio,
+  });
+}
+
+class AuthLogoutRequested {}
+class AuthCheckRequested {}
+
+// States
+class AuthInitial {}
+class AuthLoading {}
+class AuthAuthenticated {
+  final User user;
+  final String token;
+  AuthAuthenticated(this.user, this.token);
+}
+class AuthUnauthenticated {}
+class AuthError {
+  final String message;
+  AuthError(this.message);
+}
+
+// Bloc
+class AuthBloc extends Bloc<Object, Object> {
   final AuthRepository authRepository;
 
-  AuthBloc({required this.authRepository}) : super(const AuthInitial()) {
+  AuthBloc({required this.authRepository}) : super(AuthInitial()) {
     on<AuthLoginRequested>(_onLoginRequested);
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
@@ -15,9 +57,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onLoginRequested(
     AuthLoginRequested event,
-    Emitter<AuthState> emit,
+    Emitter<Object> emit,
   ) async {
-    emit(const AuthLoading());
+    emit(AuthLoading());
 
     final result = await authRepository.login(
       email: event.email,
@@ -25,21 +67,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     if (result['success']) {
-      emit(AuthAuthenticated(
-        user: result['user'],
-        token: result['token'],
-      ));
+      emit(AuthAuthenticated(result['user'], result['token']));
     } else {
-      emit(AuthError(message: result['message']));
-      emit(const AuthUnauthenticated());
+      emit(AuthError(result['message']));
+      emit(AuthUnauthenticated());
     }
   }
 
   Future<void> _onRegisterRequested(
     AuthRegisterRequested event,
-    Emitter<AuthState> emit,
+    Emitter<Object> emit,
   ) async {
-    emit(const AuthLoading());
+    emit(AuthLoading());
 
     final result = await authRepository.register(
       name: event.name,
@@ -51,47 +90,39 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     if (result['success']) {
-      emit(AuthAuthenticated(
-        user: result['user'],
-        token: result['token'],
-      ));
+      emit(AuthAuthenticated(result['user'], result['token']));
     } else {
-      emit(AuthError(message: result['message']));
-      emit(const AuthUnauthenticated());
+      emit(AuthError(result['message']));
+      emit(AuthUnauthenticated());
     }
   }
 
   Future<void> _onLogoutRequested(
     AuthLogoutRequested event,
-    Emitter<AuthState> emit,
+    Emitter<Object> emit,
   ) async {
-    emit(const AuthLoading());
-    
+    emit(AuthLoading());
     await authRepository.logout();
-    
-    emit(const AuthUnauthenticated());
+    emit(AuthUnauthenticated());
   }
 
   Future<void> _onCheckRequested(
     AuthCheckRequested event,
-    Emitter<AuthState> emit,
+    Emitter<Object> emit,
   ) async {
-    emit(const AuthLoading());
+    emit(AuthLoading());
 
     final isLoggedIn = await authRepository.isLoggedIn();
 
     if (isLoggedIn) {
       final result = await authRepository.getProfile();
       if (result['success']) {
-        emit(AuthAuthenticated(
-          user: result['user'],
-          token: '', // Token already stored
-        ));
+        emit(AuthAuthenticated(result['user'], ''));
       } else {
-        emit(const AuthUnauthenticated());
+        emit(AuthUnauthenticated());
       }
     } else {
-      emit(const AuthUnauthenticated());
+      emit(AuthUnauthenticated());
     }
   }
 }

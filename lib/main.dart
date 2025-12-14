@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_app/app/data/repositories/auth_repository.dart';
 import 'package:gym_app/app/modules/auth/bloc/auth_bloc.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_event.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_state.dart';
 import 'package:gym_app/app/modules/auth/screens/login_page.dart';
 import 'package:gym_app/app/widgets/main_navigation.dart';
 import 'package:gym_app/app/config/routes/app_routes.dart';
@@ -22,7 +20,7 @@ class MyApp extends StatelessWidget {
       child: BlocProvider(
         create: (context) => AuthBloc(
           authRepository: context.read<AuthRepository>(),
-        )..add(const AuthCheckRequested()),
+        )..add(AuthCheckRequested()),
         child: MaterialApp(
           title: 'Gym App',
           debugShowCheckedModeBanner: false,
@@ -43,7 +41,7 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocBuilder<AuthBloc, Object>(
       builder: (context, state) {
         if (state is AuthLoading || state is AuthInitial) {
           return const Scaffold(

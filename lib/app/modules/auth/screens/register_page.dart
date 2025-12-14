@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_app/app/modules/auth/bloc/auth_bloc.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_event.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_state.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -53,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(
         title: const Text('Register'),
       ),
-      body: BlocListener<AuthBloc, AuthState>(
+      body: BlocListener<AuthBloc, Object>(
         listener: (context, state) {
           if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -235,7 +233,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(height: 24),
 
                     // Register Button
-                    BlocBuilder<AuthBloc, AuthState>(
+                    BlocBuilder<AuthBloc, Object>(
                       builder: (context, state) {
                         return ElevatedButton(
                           onPressed: state is AuthLoading ? null : _handleRegister,

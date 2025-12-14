@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_app/app/modules/auth/bloc/auth_bloc.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_event.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_state.dart';
+import 'package:gym_app/shared/widgets/storage_network_image.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -30,7 +29,7 @@ class ProfilePage extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         Navigator.pop(dialogContext);
-                        context.read<AuthBloc>().add(const AuthLogoutRequested());
+                        context.read<AuthBloc>().add(AuthLogoutRequested());
                       },
                       child: const Text('Logout'),
                     ),
@@ -41,7 +40,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<AuthBloc, AuthState>(
+      body: BlocBuilder<AuthBloc, Object>(
         builder: (context, state) {
           if (state is AuthAuthenticated) {
             final user = state.user;
@@ -53,12 +52,17 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(height: 20),
                   CircleAvatar(
                     radius: 60,
-                    backgroundImage: user.profileImage != null
-                        ? NetworkImage(user.fullProfileImageUrl)
-                        : null,
-                    child: user.profileImage == null
-                        ? const Icon(Icons.person, size: 60)
-                        : null,
+                    backgroundColor: Colors.grey[200],
+                    child: ClipOval(
+                      child: user.profileImage != null
+                          ? StorageNetworkImage(
+                              imagePath: user.profileImagePath,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            )
+                          : const Icon(Icons.person, size: 50),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(

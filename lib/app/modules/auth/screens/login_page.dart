@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gym_app/app/modules/auth/bloc/auth_bloc.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_event.dart';
-import 'package:gym_app/app/modules/auth/bloc/auth_state.dart';
 import 'package:gym_app/app/config/routes/app_routes.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,8 +27,8 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       context.read<AuthBloc>().add(
             AuthLoginRequested(
-              email: _emailController.text.trim(),
-              password: _passwordController.text,
+              _emailController.text.trim(),
+              _passwordController.text,
             ),
           );
     }
@@ -39,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthBloc, AuthState>(
+      body: BlocListener<AuthBloc, Object>(
         listener: (context, state) {
           if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -145,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 24),
 
                     // Login Button
-                    BlocBuilder<AuthBloc, AuthState>(
+                    BlocBuilder<AuthBloc, Object>(
                       builder: (context, state) {
                         return ElevatedButton(
                           onPressed: state is AuthLoading ? null : _handleLogin,

@@ -77,7 +77,16 @@ class User {
     if (profileImage!.startsWith('http')) {
       return profileImage!;
     }
-    return 'https://gym.sulthon.blue.com/storage/$profileImage';
+    return 'https://gym.sulthon.blue/storage/$profileImage';
+  }
+
+  /// Get the storage path for profile image (without base URL)
+  String get profileImagePath {
+    if (profileImage == null || profileImage!.isEmpty) {
+      return 'user_profile/default-user_profile.jpg';
+    }
+    // Remove storage/ prefix if it exists
+    return profileImage!.replaceFirst('storage/', '');
   }
 
   bool get isEmailVerified => emailVerifiedAt != null;
