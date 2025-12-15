@@ -25,9 +25,18 @@ class MembershipView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F4F5),
       appBar: AppBar(
-        title: const Text('Membership Packages'),
+        title: const Text('Membership Packages', style: TextStyle(fontWeight: FontWeight.w600)),
         automaticallyImplyLeading: false,
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            color: Colors.black.withOpacity(0.05),
+            height: 1,
+          ),
+        ),
       ),
       body: BlocConsumer<MembershipBloc, Object>(
         listener: (context, state) {
@@ -88,60 +97,84 @@ class MembershipView extends StatelessWidget {
   Widget _buildPackageCard(BuildContext context, package) {
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ');
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: InkWell(
-        onTap: () => _showPackageDetails(context, package),
-        borderRadius: BorderRadius.circular(10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-              child: StorageNetworkImage(
-                imagePath: package.primaryImage,
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder: Container(
-                  height: 150,
-                  color: Colors.grey[200],
-                  child: const Icon(Icons.image, size: 40, color: Colors.grey),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => _showPackageDetails(context, package),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: StorageNetworkImage(
+                  imagePath: package.primaryImage,
+                  height: 140,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: Container(
+                    height: 140,
+                    color: const Color(0xFFF4F4F5),
+                    child: const Icon(Icons.card_membership, size: 40, color: Color(0xFF71717A)),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    package.name,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    '${package.duration} days',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    currencyFormat.format(package.price),
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      package.name,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF18181B),
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(Icons.schedule, size: 14, color: Color(0xFF71717A)),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${package.duration} days',
+                          style: const TextStyle(fontSize: 13, color: Color(0xFF71717A)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      currencyFormat.format(package.price),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFDC2626),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

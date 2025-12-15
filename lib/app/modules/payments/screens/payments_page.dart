@@ -25,9 +25,18 @@ class PaymentsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F4F5),
       appBar: AppBar(
-        title: const Text('Transaction History'),
+        title: const Text('Transaction History', style: TextStyle(fontWeight: FontWeight.w600)),
         automaticallyImplyLeading: false,
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            color: Colors.black.withOpacity(0.05),
+            height: 1,
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -110,150 +119,188 @@ class PaymentsView extends StatelessWidget {
     final dateFormat = DateFormat('dd MMM yyyy, HH:mm');
 
     Color statusColor;
+    Color statusBgColor;
     IconData statusIcon;
     String statusText;
 
     switch (transaction.paymentStatus.toLowerCase()) {
       case 'pending':
-        statusColor = Colors.orange;
+        statusColor = const Color(0xFFF59E0B);
+        statusBgColor = const Color(0xFFFEF3C7);
         statusIcon = Icons.hourglass_empty;
         statusText = 'PENDING';
         break;
       case 'paid':
       case 'success':
-        statusColor = Colors.green;
+        statusColor = const Color(0xFF16A34A);
+        statusBgColor = const Color(0xFFDCFCE7);
         statusIcon = Icons.check_circle;
         statusText = 'PAID';
         break;
       case 'failed':
       case 'cancelled':
-        statusColor = Colors.red;
+        statusColor = const Color(0xFFDC2626);
+        statusBgColor = const Color(0xFFFEE2E2);
         statusIcon = Icons.cancel;
         statusText = 'FAILED';
         break;
       default:
-        statusColor = Colors.grey;
+        statusColor = const Color(0xFF71717A);
+        statusBgColor = const Color(0xFFF4F4F5);
         statusIcon = Icons.info;
         statusText = transaction.paymentStatus.toUpperCase();
     }
 
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: InkWell(
-        onTap: () {
-          _showTransactionDetails(context, transaction);
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Left side - Icon and status
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          onTap: () {
+            _showTransactionDetails(context, transaction);
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left side - Icon and status
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: statusBgColor,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: statusColor.withOpacity(0.15),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    statusIcon,
+                    color: statusColor,
+                    size: 28,
+                  ),
                 ),
-                child: Icon(
-                  statusIcon,
-                  color: statusColor,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: 16),
-              
-              // Middle - Transaction details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            transaction.code,
+                const SizedBox(width: 16),
+                
+                // Middle - Transaction details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              transaction.code,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF18181B),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              color: statusBgColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              statusText,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: statusColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF4F4F5),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Icon(
+                              Icons.fitness_center,
+                              size: 14,
+                              color: Color(0xFF71717A),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              transaction.purchasableType == 'gym_class'
+                                  ? 'Gym Class'
+                                  : transaction.purchasableType == 'membership'
+                                      ? 'Membership'
+                                      : transaction.purchasableType,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF52525B),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF4F4F5),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Icon(
+                              Icons.calendar_today,
+                              size: 14,
+                              color: Color(0xFF71717A),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            dateFormat.format(transaction.createdAt),
                             style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: Color(0xFF71717A),
                             ),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: statusColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            statusText,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: statusColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.fitness_center,
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            transaction.purchasableType == 'gym_class'
-                                ? 'Gym Class'
-                                : transaction.purchasableType == 'membership'
-                                    ? 'Membership'
-                                    : transaction.purchasableType,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey[700],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          dateFormat.format(transaction.createdAt),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
                     Text(
                       currencyFormat.format(transaction.amount),
-                      style: TextStyle(
-                        fontSize: 18,
+                      style: const TextStyle(
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor,
+                        color: Color(0xFFDC2626),
                       ),
                     ),
                   ],
@@ -261,14 +308,23 @@ class PaymentsView extends StatelessWidget {
               ),
               
               // Right side - Arrow
-              const Icon(
-                Icons.chevron_right,
-                color: Colors.grey,
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF4F4F5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.chevron_right,
+                  color: Color(0xFF71717A),
+                  size: 20,
+                ),
               ),
             ],
           ),
         ),
       ),
+    )
     );
   }
 

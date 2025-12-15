@@ -24,9 +24,18 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F4F5),
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Dashboard', style: TextStyle(fontWeight: FontWeight.w600)),
         automaticallyImplyLeading: false,
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(
+            color: Colors.black.withOpacity(0.05),
+            height: 1,
+          ),
+        ),
       ),
       body: BlocBuilder<DashboardBloc, Object>(
         builder: (context, dashboardState) {
@@ -69,27 +78,54 @@ class DashboardView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Welcome Card
-                    Card(
-                      elevation: 2,
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFDC2626), Color(0xFFEF4444)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFDC2626).withOpacity(0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(20.0),
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.grey[200],
-                              child: ClipOval(
-                                child: user['profile_image'] != null
-                                    ? StorageNetworkImage(
-                                        imagePath: user['profile_image']
-                                            .toString()
-                                            .replaceAll('https://gym.sulthon.blue/storage/', '')
-                                            .replaceAll('https://gym.sulthon.blue/', ''),
-                                        width: 60,
-                                        height: 60,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : const Icon(Icons.person),
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 3),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                radius: 32,
+                                backgroundColor: Colors.white,
+                                child: ClipOval(
+                                  child: user['profile_image'] != null
+                                      ? StorageNetworkImage(
+                                          imagePath: user['profile_image']
+                                              .toString()
+                                              .replaceAll('https://gym.sulthon.blue/storage/', '')
+                                              .replaceAll('https://gym.sulthon.blue/', ''),
+                                          width: 64,
+                                          height: 64,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : const Icon(Icons.person, size: 32, color: Color(0xFFDC2626)),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -100,7 +136,8 @@ class DashboardView extends StatelessWidget {
                                   Text(
                                     'Welcome back!',
                                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: Colors.grey[600],
+                                          color: Colors.white.withOpacity(0.9),
+                                          fontSize: 13,
                                         ),
                                   ),
                                   const SizedBox(height: 4),
@@ -108,6 +145,8 @@ class DashboardView extends StatelessWidget {
                                     user['name'] ?? 'User',
                                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                           fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 22,
                                         ),
                                   ),
                                 ],
@@ -124,6 +163,8 @@ class DashboardView extends StatelessWidget {
                       'Ringkasan Aktivitas',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: const Color(0xFF18181B),
                           ),
                     ),
                     const SizedBox(height: 12),
@@ -135,7 +176,8 @@ class DashboardView extends StatelessWidget {
                             icon: Icons.fitness_center,
                             label: 'Visit Gym\nBulan Ini',
                             value: '${summary['visitCountInCurrentMonth'] ?? 0}',
-                            color: Colors.red,
+                            color: const Color(0xFFDC2626),
+                            bgColor: const Color(0xFFFEE2E2),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -145,7 +187,8 @@ class DashboardView extends StatelessWidget {
                             icon: Icons.trending_up,
                             label: 'Visit Gym\nMinggu Ini',
                             value: '${summary['visitCountInCurrentWeek'] ?? 0}',
-                            color: Colors.orange,
+                            color: const Color(0xFFEF4444),
+                            bgColor: const Color(0xFFFEE2E2),
                           ),
                         ),
                       ],
@@ -159,7 +202,8 @@ class DashboardView extends StatelessWidget {
                             icon: Icons.school,
                             label: 'Kelas Gym\nBulan Ini',
                             value: '${summary['gymClassCountInCurrentMonth'] ?? 0}',
-                            color: Colors.amber,
+                            color: const Color(0xFF52525B),
+                            bgColor: const Color(0xFFF4F4F5),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -169,7 +213,8 @@ class DashboardView extends StatelessWidget {
                             icon: Icons.timer,
                             label: 'Rata-rata\nWaktu Visit',
                             value: summary['averageVisitTimeFormatted'] ?? 'Belum Ada',
-                            color: Colors.yellow.shade700,
+                            color: const Color(0xFF71717A),
+                            bgColor: const Color(0xFFF4F4F5),
                           ),
                         ),
                       ],
@@ -182,44 +227,56 @@ class DashboardView extends StatelessWidget {
                         gradient: currentMembership != null
                             ? LinearGradient(
                                 colors: [
-                                  Colors.red.shade50,
-                                  Colors.orange.shade50,
+                                  const Color(0xFFDC2626).withOpacity(0.1),
+                                  const Color(0xFFEF4444).withOpacity(0.05),
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               )
                             : LinearGradient(
                                 colors: [
-                                  Colors.grey.shade100,
-                                  Colors.grey.shade200,
+                                  const Color(0xFFF4F4F5),
+                                  const Color(0xFFE4E4E7),
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
                       ),
                       padding: const EdgeInsets.all(20.0),
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
                               color: currentMembership != null
-                                  ? Colors.green.withOpacity(0.2)
-                                  : Colors.red.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
+                                  ? const Color(0xFF10B981).withOpacity(0.15)
+                                  : const Color(0xFFDC2626).withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: (currentMembership != null
+                                      ? const Color(0xFF10B981)
+                                      : const Color(0xFFDC2626)).withOpacity(0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                             ),
                             child: Icon(
                               currentMembership != null
                                   ? Icons.check_circle_rounded
                                   : Icons.warning_rounded,
                               color: currentMembership != null
-                                  ? Colors.green.shade700
-                                  : Colors.red.shade700,
+                                  ? const Color(0xFF10B981)
+                                  : const Color(0xFFDC2626),
                               size: 32,
                             ),
                           ),
@@ -235,6 +292,7 @@ class DashboardView extends StatelessWidget {
                                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
+                                        color: const Color(0xFF18181B),
                                       ),
                                 ),
                                 const SizedBox(height: 6),
@@ -243,7 +301,7 @@ class DashboardView extends StatelessWidget {
                                       ? 'Berlaku hingga: ${_formatDate(currentMembership['end_date'])}'
                                       : 'Beli paket membership untuk mulai berolahraga',
                                   style: TextStyle(
-                                    color: Colors.grey.shade700,
+                                    color: const Color(0xFF71717A),
                                     fontSize: 13,
                                   ),
                                 ),
@@ -251,19 +309,34 @@ class DashboardView extends StatelessWidget {
                             ),
                           ),
                           if (currentMembership == null)
-                            ElevatedButton(
-                              onPressed: () {
-                                // Navigate to membership page
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red.shade600,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 12,
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFDC2626), Color(0xFFEF4444)],
                                 ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFFDC2626).withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              child: const Text('Beli Paket'),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // Navigate to membership page
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                child: const Text('Beli Paket'),
+                              ),
                             ),
                         ],
                       ),
@@ -275,6 +348,8 @@ class DashboardView extends StatelessWidget {
                       'Quick Actions',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: const Color(0xFF18181B),
                           ),
                     ),
                     const SizedBox(height: 12),
@@ -290,24 +365,32 @@ class DashboardView extends StatelessWidget {
                           context,
                           icon: Icons.calendar_today,
                           label: 'Book Class',
+                          color: const Color(0xFFDC2626),
+                          bgColor: const Color(0xFFFEE2E2),
                           onTap: () {},
                         ),
                         _buildActionCard(
                           context,
                           icon: Icons.person_outline,
                           label: 'Find Trainer',
+                          color: const Color(0xFFEF4444),
+                          bgColor: const Color(0xFFFEE2E2),
                           onTap: () {},
                         ),
                         _buildActionCard(
                           context,
                           icon: Icons.history,
                           label: 'View History',
+                          color: const Color(0xFF52525B),
+                          bgColor: const Color(0xFFF4F4F5),
                           onTap: () {},
                         ),
                         _buildActionCard(
                           context,
                           icon: Icons.qr_code,
                           label: 'Check In',
+                          color: const Color(0xFF71717A),
+                          bgColor: const Color(0xFFF4F4F5),
                           onTap: () {},
                         ),
                       ],
@@ -331,27 +414,46 @@ class DashboardView extends StatelessWidget {
     required String label,
     required String value,
     required Color color,
+    required Color bgColor,
   }) {
-    return Card(
-      elevation: 2,
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Icon(icon, color: color, size: 32),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 28),
+            ),
             const SizedBox(height: 8),
             Text(
               value,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: const Color(0xFF18181B),
                   ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(
-                color: Colors.grey[600],
+              style: const TextStyle(
+                color: Color(0xFF71717A),
                 fontSize: 12,
               ),
               textAlign: TextAlign.center,
@@ -380,26 +482,52 @@ class DashboardView extends StatelessWidget {
     BuildContext context, {
     required IconData icon,
     required String label,
+    required Color color,
+    required Color bgColor,
     required VoidCallback onTap,
   }) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 32, color: Theme.of(context).primaryColor),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: bgColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, size: 28, color: color),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF18181B),
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),

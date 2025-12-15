@@ -25,7 +25,41 @@ class MyApp extends StatelessWidget {
           title: 'Gym App',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFFDC2626), // Red-600
+              primary: const Color(0xFFDC2626),
+              secondary: const Color(0xFFEF4444), // Red-500
+              surface: const Color(0xFFFAFAFA), // Zinc-50
+              background: const Color(0xFFF4F4F5), // Zinc-100
+            ),
+            scaffoldBackgroundColor: const Color(0xFFF4F4F5),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.white,
+              foregroundColor: Color(0xFF18181B), // Zinc-900
+              elevation: 0,
+              shadowColor: Colors.black12,
+              surfaceTintColor: Color.fromARGB(0, 249, 171, 171),
+            ),
+            cardTheme: CardThemeData(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              color: Colors.white,
+              shadowColor: Colors.black.withOpacity(0.1),
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFDC2626),
+                foregroundColor: Colors.white,
+                elevation: 2,
+                shadowColor: Colors.black.withOpacity(0.2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              ),
+            ),
             useMaterial3: true,
           ),
           home: const AuthWrapper(),

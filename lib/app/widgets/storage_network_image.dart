@@ -80,15 +80,31 @@ class StorageNetworkImage extends StatelessWidget {
                 width: width,
                 height: height,
                 color: Colors.grey[300],
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.broken_image, size: 40, color: Colors.grey),
-                    SizedBox(height: 4),
-                    Text(
-                      'Image not found',
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                    Flexible(
+                      child: Icon(
+                        Icons.broken_image, 
+                        size: (width != null && width! < 60) ? 20 : 40, 
+                        color: Colors.grey,
+                      ),
                     ),
+                    if (height == null || height! > 30) ...[
+                      const SizedBox(height: 2),
+                      Flexible(
+                        child: Text(
+                          'Image not found',
+                          style: TextStyle(
+                            fontSize: (width != null && width! < 60) ? 8 : 10, 
+                            color: Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
