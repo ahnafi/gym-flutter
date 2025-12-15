@@ -86,10 +86,10 @@ class GymclassRepository {
       
       final response = await _api.post(
         ApiUrl.purchaseGymClass,
-        {
+        json.encode({
           'gym_class_id': gymClassId.toString(),
           'gym_class_schedule_id': gymClassScheduleId.toString(),
-        },
+        }),
       );
 
       print('🏋️‍♂️ Response status: ${response.statusCode}');

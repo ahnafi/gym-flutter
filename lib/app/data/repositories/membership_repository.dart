@@ -81,9 +81,9 @@ class MembershipRepository {
       
       final response = await _api.post(
         ApiUrl.paymentMembership,
-        {
+        json.encode({
           'membership_package_id': packageId.toString(),
-        },
+        }),
       );
 
       print('💳 Response status: ${response.statusCode}');
